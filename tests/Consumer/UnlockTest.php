@@ -18,6 +18,31 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class UnlockTest extends TestCase
 {
+    public function test_unlock_before_lock()
+    {
+        $rawMsg = '{"id":10,"submit":true}';
+        $msg = new AMQPMessage($rawMsg);
+
+        $serializer = $this->createMock(SerializerInterface::class);
+        $serializer
+            ->expects($this->once())
+            ->method('deserialize')
+            ->with($rawMsg, UnlockMessage::class, 'json')
+            ->willReturn((new UnlockMessage())->setId(10)->setSubmit(true))
+        ;
+        $redis = $this->getMockBuilder(Client::class)->setMethods(['exists'])->getMock();
+        $redis
+            ->expects($this->once())
+            ->method('exists')
+            ->with(StorageKeys::LOCK_PREFIX.'10')
+            ->willReturn(0)
+        ;
+
+        $consumer = new UnlockConsumer($redis, $serializer);
+        $result = $consumer->execute($msg);
+        $this->assertFalse($result);
+    }
+
     public function test_submit_true()
     {
         $rawMsg = '{"id":10,"submit":true}';
@@ -30,7 +55,13 @@ class UnlockTest extends TestCase
             ->with($rawMsg, UnlockMessage::class, 'json')
             ->willReturn((new UnlockMessage())->setId(10)->setSubmit(true))
         ;
-        $redis = $this->getMockBuilder(Client::class)->setMethods(['del'])->getMock();
+        $redis = $this->getMockBuilder(Client::class)->setMethods(['del', 'exists'])->getMock();
+        $redis
+            ->expects($this->once())
+            ->method('exists')
+            ->with(StorageKeys::LOCK_PREFIX.'10')
+            ->willReturn(1)
+        ;
         $redis
             ->expects($this->once())
             ->method('del')
@@ -54,7 +85,13 @@ class UnlockTest extends TestCase
             ->with($rawMsg, UnlockMessage::class, 'json')
             ->willReturn((new UnlockMessage())->setId(10)->setSubmit(false))
         ;
-        $redis = $this->getMockBuilder(Client::class)->setMethods(['del', 'get', 'incrby'])->getMock();
+        $redis = $this->getMockBuilder(Client::class)->setMethods(['del', 'get', 'incrby', 'exists'])->getMock();
+        $redis
+            ->expects($this->once())
+            ->method('exists')
+            ->with(StorageKeys::LOCK_PREFIX.'10')
+            ->willReturn(1)
+        ;
         $oldTransaction = '{"id":10,"uid":1,"amount":2}';
         $redis
             ->expects($this->once())

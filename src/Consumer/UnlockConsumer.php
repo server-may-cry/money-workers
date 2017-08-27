@@ -31,6 +31,9 @@ class UnlockConsumer implements ConsumerInterface
             UnlockMessage::class,
             'json'
         );
+        if ($this->redis->exists(StorageKeys::LOCK_PREFIX.$unlock->getId()) !== 1) {
+            return false;
+        }
         if ($unlock->getSubmit() !== true) {
             $transactionRaw = $this->redis->get(
                 StorageKeys::LOCK_PREFIX.$unlock->getId()
