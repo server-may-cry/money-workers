@@ -1,0 +1,17 @@
+version: '3'
+services:
+  redis:
+    image: redis:4.0-alpine
+  rabbitmq:
+    image: rabbitmq:3.6-alpine
+  php:
+    build: .
+    command: ["sh"]
+    links:
+      - redis
+      - rabbitmq
+    environment:
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_HOSTNAME: rabbitmq
+    volumes:
+      - .:/app

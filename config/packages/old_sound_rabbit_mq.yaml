@@ -1,0 +1,31 @@
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host: '%env(RABBITMQ_HOSTNAME)%'
+            #use_socket: true
+    producers:
+        # use 'old_sound_rabbit_mq.change_producer' service to send data.
+        change:
+            connection:       default
+            exchange_options: { name: 'task', type: direct }
+    consumers:
+        change:
+            connection:       default
+            exchange_options: { name: 'task', type: direct }
+            queue_options:    { name: 'task'}
+            callback:         App\Consumer\ChangeConsumer
+        exchange:
+            connection:       default
+            exchange_options: { name: 'task', type: direct }
+            queue_options:    { name: 'task'}
+            callback:         App\Consumer\ExchangeConsumer
+        lock:
+            connection:       default
+            exchange_options: { name: 'task', type: direct }
+            queue_options:    { name: 'task'}
+            callback:         App\Consumer\LockConsumer
+        unlock:
+            connection:       default
+            exchange_options: { name: 'task', type: direct }
+            queue_options:    { name: 'task'}
+            callback:         App\Consumer\UnlockConsumer

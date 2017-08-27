@@ -1,0 +1,50 @@
+version: '3.3'
+services:
+  redis:
+    image: redis:4.0-alpine
+  rabbitmq:
+    image: rabbitmq:3.6-alpine
+
+  # workers
+  change:
+    image: server-may-cry/money-workers
+    command: ["bin/console", "rabbitmq:consumer", "change"]
+    deploy:
+      replicas: 4
+    environment:
+      REDIS_URL: redis://redis
+      RABBITMQ_HOSTNAME: rabbitmq
+  exchange:
+    image: server-may-cry/money-workers
+    command: ["bin/console", "rabbitmq:consumer", "exchange"]
+    deploy:
+      replicas: 4
+    environment:
+      REDIS_URL: redis://redis
+      RABBITMQ_HOSTNAME: rabbitmq
+  lock:
+    image: server-may-cry/money-workers
+    command: ["bin/console", "rabbitmq:consumer", "lock"]
+    deploy:
+      replicas: 4
+    environment:
+      REDIS_URL: redis://redis
+      RABBITMQ_HOSTNAME: rabbitmq
+  unlock:
+    image: server-may-cry/money-workers
+    command: ["bin/console", "rabbitmq:consumer", "unlock"]
+    deploy:
+      replicas: 4
+    environment:
+      REDIS_URL: redis://redis
+      RABBITMQ_HOSTNAME: rabbitmq
+
+  # example producer
+  producer:
+    image: server-may-cry/money-workers
+    command: ["bin/console", "producer"]
+    deploy:
+      replicas: 8
+    environment:
+      REDIS_URL: redis://redis
+      RABBITMQ_HOSTNAME: rabbitmq
