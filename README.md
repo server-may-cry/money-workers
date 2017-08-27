@@ -1,5 +1,6 @@
 money-workers
 =============
+[![Build Status](https://travis-ci.org/server-may-cry/money-workers.svg?branch=master)](https://travis-ci.org/server-may-cry/money-workers)
 
 ###### Stack:
 * symfony 3.3

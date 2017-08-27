@@ -7,7 +7,7 @@ services:
 
   # workers
   change:
-    image: server-may-cry/money-workers
+    image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "change"]
     deploy:
       replicas: 4
@@ -15,7 +15,7 @@ services:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq
   exchange:
-    image: server-may-cry/money-workers
+    image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "exchange"]
     deploy:
       replicas: 4
@@ -23,7 +23,7 @@ services:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq
   lock:
-    image: server-may-cry/money-workers
+    image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "lock"]
     deploy:
       replicas: 4
@@ -31,7 +31,7 @@ services:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq
   unlock:
-    image: server-may-cry/money-workers
+    image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "unlock"]
     deploy:
       replicas: 4
@@ -41,7 +41,7 @@ services:
 
   # example producer
   producer:
-    image: server-may-cry/money-workers
+    image: servermaycry/money-workers
     command: ["bin/console", "producer"]
     deploy:
       replicas: 8
