@@ -10,7 +10,7 @@ services:
     image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "change"]
     deploy:
-      replicas: 4
+      replicas: 2
     environment:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq
@@ -18,7 +18,7 @@ services:
     image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "exchange"]
     deploy:
-      replicas: 4
+      replicas: 2
     environment:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq
@@ -26,7 +26,7 @@ services:
     image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "lock"]
     deploy:
-      replicas: 4
+      replicas: 2
     environment:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq
@@ -34,7 +34,7 @@ services:
     image: servermaycry/money-workers
     command: ["bin/console", "rabbitmq:consumer", "unlock"]
     deploy:
-      replicas: 4
+      replicas: 2
     environment:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq
@@ -44,7 +44,7 @@ services:
     image: servermaycry/money-workers
     command: ["bin/console", "producer"]
     deploy:
-      replicas: 8
+      replicas: 2
     environment:
       REDIS_URL: redis://redis
       RABBITMQ_HOSTNAME: rabbitmq

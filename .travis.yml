@@ -3,7 +3,6 @@ sudo: false
 php:
   - "7.1"
 install:
-  - echo "" > .env
   - composer install
 script:
   - make test
