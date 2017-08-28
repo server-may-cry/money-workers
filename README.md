@@ -11,4 +11,4 @@ money-workers
 
 run phpstan and unit tests: `$ make test`
 
-run on live (need swarm): `$ docker stack deploy money-workers --compose-file docker-compose-live.yml`
+run on live (need swarm): `$ docker-compose -f docker-compose-live.yml up`
