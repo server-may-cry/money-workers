@@ -17,7 +17,5 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php -r "unlink('composer-setup.php');" \
   && php composer.phar install -o
 
-ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /app/wait-for-it/wait-for-it.sh
-
 ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["bin/console"]
